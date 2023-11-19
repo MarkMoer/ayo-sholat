@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 
 const Home = () => {
   const d = new Date();
@@ -21,10 +22,14 @@ const Home = () => {
   ];
   const longName = monthNames[monthNow - 1];
 
+  const searchRef = useRef();
+  const [searchCity, setSearchCity] = useState();
+  const [idCity, setIdCity] = useState("1606");
+  const [coba, setcoba] = useState([]);
   const [jadwalSholat, setJadwalSholat] = useState({});
-  const [date, getDate] = useState(dateNow);
-  const [month, getMonth] = useState(monthNow);
-  const [year, getYear] = useState(yearNow);
+  const [date, setDate] = useState(dateNow);
+  const [month, setMonth] = useState(monthNow);
+  const [year, setYear] = useState(yearNow);
   const [clock, setClock] = useState(new Date());
 
   const refreshClock = () => {
@@ -34,11 +39,32 @@ const Home = () => {
     const res = await fetch(
       `${
         import.meta.env.VITE_BASE_URL
-      }/sholat/jadwal/1606/${year}/${month}/${date}`
+      }/sholat/jadwal/${idCity}/${year}/${month}/${date}`
     );
     const data = await res.json();
 
     setJadwalSholat(data);
+  };
+
+  const getIdCityFromApi = async () => {
+    const res = await fetch(
+      `https://api.myquran.com/v1/sholat/kota/cari/${searchCity}`
+    );
+    const data = await res.json();
+    const newData = data.data[0].id;
+    setIdCity((x) => (x, newData));
+
+    // console.log(data.data[0].id);
+  };
+
+  const handleSearch = (event) => {
+    const keyword = searchRef.current.value;
+    if (!keyword || keyword.trim() == "") return;
+    if (event.key === "Enter" || event.type === "click") {
+      event.preventDefault();
+      setSearchCity(keyword);
+      getIdCityFromApi();
+    }
   };
 
   useEffect(() => {
@@ -48,7 +74,7 @@ const Home = () => {
     return function cleanup() {
       clearInterval(timerId);
     };
-  }, []);
+  }, [idCity]);
 
   return (
     <section className="font-poppins">
@@ -65,7 +91,13 @@ const Home = () => {
             <input
               placeholder="cari kota..."
               className="w-full p-2 rounded-md"
+              ref={searchRef}
+              onKeyDown={handleSearch}
             />
+            {/* console.log({idCity}) console.log({coba}) console.log({searchCity}) */}
+            <button className="absolute top-2 end-2">
+              <MagnifyingGlass size={24} onClick={handleSearch} />
+            </button>
           </div>
           <div className="">
             <a
