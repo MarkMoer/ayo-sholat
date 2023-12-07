@@ -23,9 +23,8 @@ const Home = () => {
   const longName = monthNames[monthNow - 1];
 
   const searchRef = useRef();
-  const [searchCity, setSearchCity] = useState();
+  const [searchCity, setSearchCity] = useState("Gresik");
   const [idCity, setIdCity] = useState("1606");
-  const [coba, setcoba] = useState([]);
   const [jadwalSholat, setJadwalSholat] = useState({});
   const [date, setDate] = useState(dateNow);
   const [month, setMonth] = useState(monthNow);
@@ -41,8 +40,7 @@ const Home = () => {
         import.meta.env.VITE_BASE_URL
       }/sholat/jadwal/${idCity}/${year}/${month}/${date}`
     );
-    const data = await res.json();
-
+    let data = await res.json();
     setJadwalSholat(data);
   };
 
@@ -50,11 +48,9 @@ const Home = () => {
     const res = await fetch(
       `https://api.myquran.com/v1/sholat/kota/cari/${searchCity}`
     );
-    const data = await res.json();
-    const newData = data.data[0].id;
-    setIdCity((x) => (x, newData));
-
-    // console.log(data.data[0].id);
+    let data = await res.json();
+    let newData = await data.data[0].id;
+    setIdCity(newData);
   };
 
   const handleSearch = (event) => {
@@ -70,11 +66,12 @@ const Home = () => {
   useEffect(() => {
     document.body.style.backgroundColor = "#1C0A00";
     getApi();
+    getIdCityFromApi();
     const timerId = setInterval(refreshClock, 1000);
     return function cleanup() {
       clearInterval(timerId);
     };
-  }, [idCity]);
+  }, [jadwalSholat]);
 
   return (
     <section className="font-poppins">
@@ -94,6 +91,7 @@ const Home = () => {
               ref={searchRef}
               onKeyDown={handleSearch}
             />
+
             {/* console.log({idCity}) console.log({coba}) console.log({searchCity}) */}
             <button className="absolute top-2 end-2">
               <MagnifyingGlass size={24} onClick={handleSearch} />
@@ -128,7 +126,7 @@ const Home = () => {
         </div>
         <div className="flex flex-col gap-2 px-4 py-4 justify-center mb-2 text-secondary items-center md:flex-row md:justify-between">
           <h1 className="text-lg font-medium md:text-2xl">
-            Gresik, {date} {longName} {year}
+            {searchCity}, {date} {longName} {year}
           </h1>
           <span className="text-lg text-blue-800 font-medium md:text-2xl text-secondary">
             {clock.toLocaleTimeString("fr-FR")}
