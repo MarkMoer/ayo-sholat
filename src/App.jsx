@@ -29,9 +29,9 @@ const Home = () => {
   const [date, setDate] = useState(dateNow);
   const [month, setMonth] = useState(monthNow);
   const [year, setYear] = useState(yearNow);
-  const [clock, setClock] = useState(new Date());
+  let [clock, setClock] = useState(new Date());
 
-  const refreshClock = () => {
+  let refreshClock = () => {
     setClock(new Date());
   };
   const getApi = async () => {
@@ -67,7 +67,7 @@ const Home = () => {
     document.body.style.backgroundColor = "#1C0A00";
     getApi();
     getIdCityFromApi();
-    const timerId = setInterval(refreshClock, 1000);
+    let timerId = setInterval(refreshClock(), 1000);
     return function cleanup() {
       clearInterval(timerId);
     };
@@ -92,7 +92,6 @@ const Home = () => {
               onKeyDown={handleSearch}
             />
 
-            {/* console.log({idCity}) console.log({coba}) console.log({searchCity}) */}
             <button className="absolute top-2 end-2">
               <MagnifyingGlass size={24} onClick={handleSearch} />
             </button>
@@ -101,7 +100,7 @@ const Home = () => {
             <a
               href="https://github.com/MarkMoer/ayo-sholat"
               target="_blank"
-              className="w-12 h-12 mr-3 rounded-full flex justify-center items-center border border-primary"
+              className="w-12 h-12 mr-3 rounded-lg flex justify-center items-center border border-primary"
             >
               <svg
                 role="img"
@@ -117,6 +116,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/*Content  */}
 
       <div className="container mx-auto py-4 px-4 items-center md:px-24">
         <div className="justify-center text-center">
@@ -179,6 +180,8 @@ const Home = () => {
             ~ Umar bin Khattab ~
           </p>
         </div>
+
+        {/* Logo Tech Stack */}
         <div className="flex items-center justify-center pt-10 gap-2">
           {/* Vite */}
           <a
