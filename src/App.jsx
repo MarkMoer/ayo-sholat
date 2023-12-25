@@ -16,18 +16,17 @@ const Home = () => {
     "July",
     "August",
     "September",
-    "October",
+    "Oktober",
     "November",
-    "December",
+    "Desember",
   ];
   const longName = monthNames[monthNow - 1];
 
   const searchRef = useRef();
   const [searchCity, setSearchCity] = useState("Gresik");
-  const [idCity, setIdCity] = useState("1606");
   const [jadwalSholat, setJadwalSholat] = useState({});
   const [date, setDate] = useState(dateNow);
-  const [month, setMonth] = useState(monthNow);
+  // const [month, setMonth] = useState(monthNow);
   const [year, setYear] = useState(yearNow);
   let [clock, setClock] = useState(new Date());
 
@@ -35,22 +34,12 @@ const Home = () => {
     setClock(new Date());
   };
   const getApi = async () => {
+    const city = searchCity.toLowerCase();
     const res = await fetch(
-      `${
-        import.meta.env.VITE_BASE_URL
-      }/sholat/jadwal/${idCity}/${year}/${month}/${date}`
+      `${import.meta.env.VITE_BASE_URL}/${city}/${year}/${monthNow}.json`
     );
-    let data = await res.json();
+    const data = await res.json();
     setJadwalSholat(data);
-  };
-
-  const getIdCityFromApi = async () => {
-    const res = await fetch(
-      `https://api.myquran.com/v1/sholat/kota/cari/${searchCity}`
-    );
-    let data = await res.json();
-    let newData = await data.data[0].id;
-    setIdCity(newData);
   };
 
   const handleSearch = (event) => {
@@ -59,19 +48,17 @@ const Home = () => {
     if (event.key === "Enter" || event.type === "click") {
       event.preventDefault();
       setSearchCity(keyword);
-      getIdCityFromApi();
     }
   };
 
   useEffect(() => {
     document.body.style.backgroundColor = "#1C0A00";
     getApi();
-    getIdCityFromApi();
-    let timerId = setInterval(refreshClock(), 1000);
+    let timerId = setInterval(refreshClock, 1000);
     return function cleanup() {
       clearInterval(timerId);
     };
-  }, [jadwalSholat]);
+  }, [searchCity]);
 
   return (
     <section className="font-poppins">
@@ -138,7 +125,7 @@ const Home = () => {
             Subuh
           </p>
           <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat.data?.jadwal.subuh}
+            {jadwalSholat[date - 1]?.shubuh}
           </p>
         </div>
         <div className="flex flex-row justify-center mb-4">
@@ -146,7 +133,7 @@ const Home = () => {
             Dhuhur
           </p>
           <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat.data?.jadwal.dzuhur}
+            {jadwalSholat[date - 1]?.dzuhur}
           </p>
         </div>
         <div className="flex flex-row justify-center mb-4">
@@ -154,7 +141,7 @@ const Home = () => {
             Ashar
           </p>
           <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat.data?.jadwal.ashar}
+            {jadwalSholat[date - 1]?.ashr}
           </p>
         </div>
         <div className="flex flex-row justify-center mb-4">
@@ -162,13 +149,13 @@ const Home = () => {
             Maghrib
           </p>
           <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat.data?.jadwal.maghrib}
+            {jadwalSholat[date - 1]?.magrib}
           </p>
         </div>
         <div className="flex flex-row justify-center mb-10">
           <p className="w-full px-4 text-lg font-medium text-secondary">Isya</p>
           <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat.data?.jadwal.isya}
+            {jadwalSholat[date - 1]?.isya}
           </p>
         </div>
         <div className="flex flex-col justify-center ">
