@@ -26,7 +26,6 @@ const Home = () => {
   const [searchCity, setSearchCity] = useState("Gresik");
   const [jadwalSholat, setJadwalSholat] = useState({});
   const [date, setDate] = useState(dateNow);
-  // const [month, setMonth] = useState(monthNow);
   const [year, setYear] = useState(yearNow);
   let [clock, setClock] = useState(new Date());
 
@@ -35,9 +34,11 @@ const Home = () => {
   };
   const getApi = async () => {
     const city = searchCity.toLowerCase();
+    const monthAPI = monthNow.toString().length < 2 ? `0${monthNow}` : monthNow;
     const res = await fetch(
-      `${import.meta.env.VITE_BASE_URL}/${city}/${year}/${monthNow}.json`
+      `${import.meta.env.VITE_BASE_URL}/${city}/${year}/${monthAPI}.json`
     );
+
     const data = await res.json();
     setJadwalSholat(data);
   };
@@ -124,39 +125,49 @@ const Home = () => {
           <p className="w-full px-4 text-lg font-medium text-secondary">
             Subuh
           </p>
-          <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat[date - 1]?.shubuh}
-          </p>
+          <div className="rounded-xl bg-secondary">
+            <p className="w-full px-4 text-end text-lg font-medium text-primary">
+              {jadwalSholat[date - 1]?.shubuh}
+            </p>
+          </div>
         </div>
         <div className="flex flex-row justify-center mb-4">
           <p className="w-full px-4 text-lg font-medium text-secondary">
             Dhuhur
           </p>
-          <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat[date - 1]?.dzuhur}
-          </p>
+          <div className="rounded-xl bg-secondary">
+            <p className="w-full px-4 text-end text-lg font-medium text-primary">
+              {jadwalSholat[date - 1]?.dzuhur}
+            </p>
+          </div>
         </div>
         <div className="flex flex-row justify-center mb-4">
           <p className="w-full px-4 text-lg font-medium text-secondary">
             Ashar
           </p>
-          <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat[date - 1]?.ashr}
-          </p>
+          <div className="rounded-xl bg-secondary">
+            <p className="w-full px-4 text-end text-lg font-medium text-primary">
+              {jadwalSholat[date - 1]?.ashr}
+            </p>
+          </div>
         </div>
         <div className="flex flex-row justify-center mb-4">
           <p className="w-full px-4 text-lg font-medium text-secondary">
             Maghrib
           </p>
-          <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat[date - 1]?.magrib}
-          </p>
+          <div className="rounded-xl bg-secondary">
+            <p className="w-full px-4 text-end text-lg font-medium text-primary">
+              {jadwalSholat[date - 1]?.magrib}
+            </p>
+          </div>
         </div>
         <div className="flex flex-row justify-center mb-10">
           <p className="w-full px-4 text-lg font-medium text-secondary">Isya</p>
-          <p className="w-full px-4 text-end text-lg font-medium text-secondary">
-            {jadwalSholat[date - 1]?.isya}
-          </p>
+          <div className="rounded-xl bg-secondary">
+            <p className="w-full px-4 text-end text-lg font-medium text-primary">
+              {jadwalSholat[date - 1]?.isya}
+            </p>
+          </div>
         </div>
         <div className="flex flex-col justify-center ">
           <p className="text-center mb-2 text-lg font-medium italic text-secondary">
